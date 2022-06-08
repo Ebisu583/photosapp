@@ -25,7 +25,7 @@ export default {
   name: 'App',
   components: { AppHeader, AppFooter },
   methods: {
-    ...mapActions([
+    ...mapActions('Categories', [
       'fetchCategories'
     ])
   },

@@ -2,7 +2,7 @@
   <div class="photolist" ref='catalog'>
     <div
       class="loader"
-      v-show="photosRequest.pending">
+      v-show="request.pending">
       <progress-spinner />
     </div>
     <photos-list
@@ -28,10 +28,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['photos', 'photosRequest'])
+    ...mapState('Photos', ['photos', 'request'])
   },
   methods: {
-    ...mapActions(['fetchPhotos', 'fetchCategoryPhotos', 'addVote']),
+    ...mapActions('Photos', ['fetchPhotos', 'fetchCategoryPhotos', 'addVote']),
     loadPhotos () {
       this.currentPage += 1
       if (!this.category) this.fetchPhotos(this.currentPage)

@@ -14,7 +14,7 @@ export default {
   name: 'CategoriesList',
   components: { Button },
   computed: {
-    ...mapState(['categories'])
+    ...mapState('Categories', ['categories'])
   },
   methods: {
     categoryUrl (category) {

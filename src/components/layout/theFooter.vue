@@ -9,7 +9,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'theFooter',
   computed: {
-    ...mapGetters(['categoriesAmount'])
+    ...mapGetters('Categories', ['categoriesAmount'])
   }
 }
 </script>
