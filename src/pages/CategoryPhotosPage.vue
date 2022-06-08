@@ -1,9 +1,9 @@
 <template>
   <header class="m-3">
     <page-title>
-      Photos
+      Category {{  $route.params.category }}
     </page-title>
-    <photos-catalog />
+    <photos-catalog :category="$route.params.category" />
   </header>
 </template>
 
@@ -13,6 +13,6 @@ import PageTitle from '../components/layout/PageTitle.vue'
 
 export default {
   components: { PageTitle, PhotosCatalog },
-  name: 'HomePage'
+  name: 'CategoryPhotosPage'
 }
 </script>

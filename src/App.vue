@@ -4,7 +4,11 @@
     <app-header />
 
     <main>
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <SlideFadeAnimation>
+          <component :is="Component" :key="$route.fullPath" />
+        </SlideFadeAnimation>
+      </router-view>
     </main>
 
     <app-footer />
@@ -15,9 +19,18 @@
 <script>
 import AppHeader from '@/components/layout/theHeader'
 import AppFooter from '@/components/layout/theFooter'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
-  components: { AppHeader, AppFooter }
+  components: { AppHeader, AppFooter },
+  methods: {
+    ...mapActions([
+      'fetchCategories'
+    ])
+  },
+  created () {
+    this.fetchCategories()
+  }
 }
 </script>
