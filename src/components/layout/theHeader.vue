@@ -9,7 +9,9 @@
         share your moments
       </small-title>
     </div>
+    <router-link to="/add-photo">
     <Button label="Submit" icon='pi pi-plus' class="p-button-raised p-button-rounded" />
+    </router-link>
   </header>
    <categories-list />
   </div>

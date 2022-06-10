@@ -10,7 +10,8 @@ export default {
       error: false,
       success: false
     },
-    allPhotosLoaded: false
+    allPhotosLoaded: false,
+    singlePhoto: {}
   },
   mutations: {
     UPDATE_PHOTOS (state, data) {
@@ -18,6 +19,9 @@ export default {
     },
     ADD_PHOTOS (state, data) {
       state.photos = [...state.photos, ...data]
+    },
+    ADD_SINGLE_PHOTO (state, data) {
+      state.singlePhoto = data
     },
     START_REQUEST (state) {
       state.request = {
@@ -82,6 +86,17 @@ export default {
     },
     async fetchCategoryPhotos ({ dispatch }, { category, page }) {
       dispatch('fetchPhotosFromAPI', { url: `${apiUrl}/photos/${category}/${page}`, page })
+    },
+    async fetchPhoto ({ commit }, id) {
+      try {
+        commit('START_REQUEST')
+        const res = await axios.get(`${apiUrl}/photos/id/${id}`)
+        await new Promise((resolve, reject) => { setTimeout(resolve, 2000) })
+        commit('END_REQUEST')
+        commit('ADD_SINGLE_PHOTO', res.data)
+      } catch {
+        commit('ERROR_REQUEST')
+      }
     }
   }
 }

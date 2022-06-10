@@ -4,6 +4,7 @@
       Category {{  $route.params.category }}
     </page-title>
     <photos-catalog :category="$route.params.category" />
+    <router-vie></router-vie>
   </header>
 </template>
 

@@ -7,6 +7,8 @@
         <img alt="user header" :src="photoUrl">
     </template>
     <template #title>
+      <router-link :to="`/${photo._id}`" class="link">
+      </router-link>
       {{ photo.title }}
     </template>
     <template #content>
@@ -65,7 +67,7 @@ img {
   background-color: rgba(155, 89, 182, 0.3);
   position:absolute;
   width: 100%;
-  height: 100%;
+  height: 400px;
   top: 0;
   left: 0;
   z-index: 2;
@@ -74,5 +76,13 @@ img {
     opacity: 1;
     transition: 0.3s;
   }
+}
+.link {
+  position:absolute;
+  width: 100%;
+  height: 191px;
+  top: 400px;
+  left: 0;
+  z-index: 2;
 }
 </style>

@@ -9,7 +9,22 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('../pages/HomePage.vue')
+    component: () => import('../pages/HomePage.vue'),
+    children: [{
+      path: '/:photoId',
+      name: 'SinglePhotoPage',
+      component: () => import('../pages/SinglePhotoPage.vue')
+    }]
+  },
+  {
+    path: '/add-photo',
+    name: 'AddPhotoPage',
+    component: () => import('../pages/AddPhotoPage.vue')
+  },
+  {
+    path: '/photos/:category/:photoId',
+    name: 'SinglePhotoCategoryPage',
+    component: () => import('../pages/SinglePhotoPage.vue')
   }
 ]
 
