@@ -9,18 +9,19 @@
 
 <script>
 import Button from 'primevue/button'
-import { mapState } from 'vuex'
+import { useStore } from 'vuex'
+import { computed } from 'vue'
 export default {
   name: 'CategoriesList',
   components: { Button },
-  computed: {
-    ...mapState('Categories', ['categories'])
-  },
-  methods: {
-    categoryUrl (category) {
-      return `/photos/${category}`
+  setup (props, context) {
+    const store = useStore()
+    const categories = computed(() => store.state.Categories.categories)
+    const categoryUrl = (category) => `/photos/${category}`
+    return {
+      categories,
+      categoryUrl
     }
   }
 }
-
 </script>

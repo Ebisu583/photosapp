@@ -11,49 +11,56 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { useStore } from 'vuex'
 import PhotosList from '../shared/PhotosList'
 import ProgressSpinner from 'primevue/progressspinner'
+import { ref, onMounted } from 'vue'
+
 export default {
   name: 'PhotosCatalog',
-  data () {
-    return {
-      currentPage: 1
-    }
-  },
-  components: { PhotosList, ProgressSpinner },
   props: {
     category: {
       type: String
     }
   },
-  computed: {
-    ...mapState('Photos', ['photos', 'request'])
-  },
-  methods: {
-    ...mapActions('Photos', ['fetchPhotos', 'fetchCategoryPhotos', 'addVote']),
-    loadPhotos () {
-      this.currentPage += 1
-      if (!this.category) this.fetchPhotos(this.currentPage)
-      else this.fetchCategoryPhotos({ category: this.category, page: this.currentPage })
-    },
-    prepareScroll () {
-      this.$refs.catalog.addEventListener('scroll', () => { this.handleScroll() })
-    },
-    handleScroll () {
-      const elem = this.$refs.catalog
+  setup (props) {
+    const currentPage = ref(1)
+    const catalog = ref(null)
+    const store = useStore()
+    const photos = store.state.Photos.photos
+    const request = store.state.Photos.request
+    // const fetchPhotos = store.dispatch('Photos/fetchPhotos')
+    // const fetchCategoryPhotos = store.dispatch('Photos/fetchCategoryPhotos')
+    const addVote = store.dispatch('Photos/addVote')
+    const loadPhotos = () => {
+      currentPage.value += 1
+      if (!props.category) store.dispatch('Photos/fetchPhotos', currentPage)
+      else store.dispatch('Photos/fetchPhotos', { category: props.category, page: currentPage })
+    }
+    const prepareScroll = () => {
+      catalog.value.addEventListener('scroll', () => { handleScroll() })
+    }
+    const handleScroll = () => {
+      const elem = catalog
       const bottomOfWindow = Math.ceil(elem.scrollTop) >= (elem.scrollHeight - elem.offsetHeight)
 
-      if (bottomOfWindow) this.loadPhotos()
+      if (bottomOfWindow) loadPhotos()
+    }
+    if (!props.category) store.dispatch('Photos/fetchPhotos', 1)
+    else store.dispatch('Photos/fetchCategoryPhotos', { category: props.category, page: 1 })
+    onMounted(() => {
+      console.log(catalog.value)
+      prepareScroll()
+    })
+    return {
+      currentPage,
+      photos,
+      request,
+      catalog,
+      addVote
     }
   },
-  created () {
-    if (!this.category) this.fetchPhotos(1)
-    else this.fetchCategoryPhotos({ category: this.category, page: 1 })
-  },
-  mounted () {
-    this.prepareScroll()
-  }
+  components: { PhotosList, ProgressSpinner }
 }
 </script>
 <style lang='scss' scoped>

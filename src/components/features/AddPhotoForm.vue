@@ -24,14 +24,14 @@
       </Field>
 
       <!-- category -->
-      <!-- <Field class="field" name="category" v-slot="{ field }" rules="required">
+      <Field class="field" name="category" v-slot="{ field }" rules="required">
         <label class="block">Category</label>
         <Listbox
           v-bind="field"
           v-model="form.category"
           :options="categories" />
         <span class="error">{{ errors.category }}</span>
-      </Field> -->
+      </Field>
 
       <!-- description -->
       <Field class="field" name="desription" v-slot="{ field }" rules="required|max:100">
@@ -76,7 +76,8 @@ import axios from 'axios'
 import { apiUrl } from '../../config'
 import { Form, Field, defineRule } from 'vee-validate'
 import { required, min, max, ext } from '@vee-validate/rules'
-import { reactive, ref, computed, getCurrentInstance } from 'vue'
+import { reactive, ref, computed } from 'vue'
+import { useStore } from 'vuex'
 defineRule('required', (value) => required(value) || 'This field is so so required...')
 defineRule('min', (value, params) => min(value, params) || `It should be longer than ${params}`)
 defineRule('max', (value, params) => max(value, params) || `It should be shorter than ${params}`)
@@ -85,7 +86,7 @@ export default {
   name: 'AddPhotoForm',
   components: { InputText, Textarea, Button, SmallTitle, ImageUpload, Message, Form, Field },
   setup (props, context) {
-    const vm = getCurrentInstance()
+    const store = useStore()
     const form = reactive({
       title: '',
       author: '',
@@ -95,7 +96,7 @@ export default {
     })
     const isSuccess = ref(false)
     const isError = ref(false)
-    const categories = computed(() => vm.$store.state.Categories.categories)
+    const categories = computed(() => store.state.Categories.categories)
     const chooseFile = (file) => {
       console.log(file)
       form.file = file
