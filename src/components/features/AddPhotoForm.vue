@@ -1,6 +1,6 @@
 <template>
 <div>
-  <Form class="grid p-5" @submit.prevent="handleSubmit" v-slot="{ errors }">
+  <Form class="grid p-5" @submit="handleSubmit" v-slot="{ errors }">
     <div class="col">
 <small-title>Add photo</small-title>
       <!-- title -->
@@ -56,6 +56,7 @@
         <span class="error">{{ errors.image }}</span>
         <ImageUpload
           v-bind="field"
+          v-model="form.file"
           @choose="handleFile" />
       </Field>
     </div>
@@ -66,7 +67,7 @@
 </template>
 <script>
 import InputText from 'primevue/inputtext'
-// import Listbox from 'primevue/listbox'
+import Listbox from 'primevue/listbox'
 import Textarea from 'primevue/textarea'
 import Button from 'primevue/button'
 import SmallTitle from '../layout/SmallTitle.vue'
@@ -78,14 +79,14 @@ import { Form, Field, defineRule } from 'vee-validate'
 import { required, min, max, ext } from '@vee-validate/rules'
 import { reactive, ref, computed } from 'vue'
 import { useStore } from 'vuex'
-defineRule('required', (value) => required(value) || 'This field is so so required...')
-defineRule('min', (value, params) => min(value, params) || `It should be longer than ${params}`)
-defineRule('max', (value, params) => max(value, params) || `It should be shorter than ${params}`)
-defineRule('ext', (value, params) => ext(value, params) || `You should use one of these extensions: ${params}`)
 export default {
   name: 'AddPhotoForm',
-  components: { InputText, Textarea, Button, SmallTitle, ImageUpload, Message, Form, Field },
+  components: { InputText, Textarea, Button, SmallTitle, ImageUpload, Message, Form, Field, Listbox },
   setup (props, context) {
+    defineRule('required', (value) => required(value) || 'This field is so so required...')
+    defineRule('min', (value, params) => min(value, params) || `It should be longer than ${params}`)
+    defineRule('max', (value, params) => max(value, params) || `It should be shorter than ${params}`)
+    defineRule('ext', (value, params) => ext(value, params) || `You should use one of these extensions: ${params}`)
     const store = useStore()
     const form = reactive({
       title: '',
@@ -96,16 +97,19 @@ export default {
     })
     const isSuccess = ref(false)
     const isError = ref(false)
-    const categories = computed(() => store.state.Categories.categories)
+    const categories = computed(() => store.state.Categories.categories.map(cat => cat.name))
     const chooseFile = (file) => {
       console.log(file)
+      form.file = file
+    }
+    const handleFile = (file) => {
       form.file = file
     }
     const handleSubmit = async () => {
       const formData = new FormData()
       formData.append('title', form.title)
       formData.append('author', form.author)
-      formData.append('category', 'none')
+      formData.append('category', form.category)
       formData.append('description', form.description)
       formData.append('file', form.file)
       isSuccess.value = false
@@ -126,7 +130,8 @@ export default {
       isError,
       categories,
       chooseFile,
-      handleSubmit
+      handleSubmit,
+      handleFile
     }
   }
 }

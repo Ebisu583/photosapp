@@ -14,7 +14,7 @@
 import { useStore } from 'vuex'
 import PhotosList from '../shared/PhotosList'
 import ProgressSpinner from 'primevue/progressspinner'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
 export default {
   name: 'PhotosCatalog',
@@ -27,15 +27,15 @@ export default {
     const currentPage = ref(1)
     const catalog = ref(null)
     const store = useStore()
-    const photos = store.state.Photos.photos
-    const request = store.state.Photos.request
-    // const fetchPhotos = store.dispatch('Photos/fetchPhotos')
-    // const fetchCategoryPhotos = store.dispatch('Photos/fetchCategoryPhotos')
-    const addVote = store.dispatch('Photos/addVote')
+    const photos = computed(() => store.state.Photos.photos)
+    const request = computed(() => store.state.Photos.request)
+    const fetchPhotos = (options) => store.dispatch('Photos/fetchPhotos', options)
+    const fetchCategoryPhotos = (options) => store.dispatch('Photos/fetchCategoryPhotos', options)
+    const addVote = () => store.dispatch('Photos/addVote')
     const loadPhotos = () => {
       currentPage.value += 1
-      if (!props.category) store.dispatch('Photos/fetchPhotos', currentPage)
-      else store.dispatch('Photos/fetchPhotos', { category: props.category, page: currentPage })
+      if (!props.category) fetchPhotos(currentPage)
+      else fetchCategoryPhotos({ category: props.category, page: currentPage })
     }
     const prepareScroll = () => {
       catalog.value.addEventListener('scroll', () => { handleScroll() })
@@ -46,14 +46,12 @@ export default {
 
       if (bottomOfWindow) loadPhotos()
     }
-    if (!props.category) store.dispatch('Photos/fetchPhotos', 1)
-    else store.dispatch('Photos/fetchCategoryPhotos', { category: props.category, page: 1 })
+    if (!props.category) fetchPhotos(1)
+    else fetchCategoryPhotos({ category: props.category, page: 1 })
     onMounted(() => {
-      console.log(catalog.value)
       prepareScroll()
     })
     return {
-      currentPage,
       photos,
       request,
       catalog,
