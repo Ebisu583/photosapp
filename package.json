@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@vee-validate/rules": "^4.6.5",
     "animate.css": "4.1.0",
     "axios": "0.20.0",
     "core-js": "^3.6.5",
@@ -15,6 +16,7 @@
     "primeicons": "^5.0.0",
     "primeui": "^4.1.15",
     "primevue": "^3.13.1",
+    "vee-validate": "^4.5.8",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0",
     "vuex": "^4.0.0"
